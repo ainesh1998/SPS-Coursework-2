@@ -80,13 +80,15 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     # reduce the train set to the features we selected
     selected_features = [10,12]
     reduced_train_set = train_set[:, selected_features[0]]
+    reduced_test_set = test_set[:, selected_features[0]]
 
     for feature in range(1, len(selected_features)):
         reduced_train_set = np.column_stack((reduced_train_set, train_set[:, selected_features[feature]]))
+        reduced_test_set = np.column_stack((reduced_test_set, test_set[:, selected_features[feature]]))
 
     classifiedTests = [] # stores the result of classification for each data sample
 
-    for test in test_set:
+    for test in reduced_test_set:
         closestNeighbourIndices = [] # stores the indices of the nearest neighbours found so far
         closestNeighbourClasses = [] # stores the classes of the nearest neighbours found so far
 
@@ -95,9 +97,9 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
             minDist = np.Infinity
             nearestClass = 0
             nearestPointIndex = 0
-            for train in range(len(train_set)):
-                if distance(test, train_set[train]) < minDist and train not in closestNeighbourIndices:
-                    minDist = distance(test, train_set[train])
+            for train in range(len(reduced_train_set)):
+                if distance(test, reduced_train_set[train]) < minDist and train not in closestNeighbourIndices:
+                    minDist = distance(test, reduced_train_set[train])
                     nearestClass = train_labels[train]
                     nearestPointIndex = train
             closestNeighbourClasses.append(nearestClass)
@@ -157,6 +159,7 @@ if __name__ == '__main__':
     elif mode == 'knn':
         predictions = knn(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
+        print(calculate_accuracy(test_labels, predictions))
     elif mode == 'alt':
         predictions = alternative_classifier(train_set, train_labels, test_set)
         print_predictions(predictions)
