@@ -50,6 +50,37 @@ def calculate_accuracy(gt_labels, pred_labels):
 
     return count/gt_labels.size
 
+def calculate_confusion_matrix(gt_labels, pred_labels,classes):
+    confusion_mat = []
+    for label in classes : # label = class i
+        row = []
+        for pred in classes: # pred = class j
+            total_count = 0
+            pred_count = 0
+            for i in range(len(gt_labels)):
+                if(gt_labels[i] == label):
+                    total_count += 1 #no of samples belonging to class i
+                    if(pred_labels[i] == pred):# no of samples belonging to class i that were classified as class j
+                        pred_count += 1
+            val = pred_count/total_count #cell of matrix
+            row.append(val)
+        confusion_mat.append(row)
+    confusion_mat = np.row_stack(confusion_mat)
+    return confusion_mat
+def plot_matrix(matrix, ax=None):
+    if ax is None:
+        ax = plt.gca()
+    plt.imshow(matrix,cmap=plt.get_cmap('summer'))
+    plt.colorbar()
+    posY = 0
+    for i in range(len(matrix)):
+        posX = 0
+        for j in range(len(matrix[0])):
+            text = str(round(matrix[i,j],3))
+            plt.text(posX,posY,text)
+            posX += 1
+        posY += 1
+    plt.show()
 ################################
 
 def feature_selection(train_set, train_labels, **kwargs):
@@ -64,11 +95,10 @@ def feature_selection(train_set, train_labels, **kwargs):
             for k in range(n_features):
                 arr = getColours(i,train_set)
                 if(len(arr) != 0):
-                    ax1.scatter(arr[:,j],arr[:,k],c = class_colours[i])
                     ax[j,k].xaxis.set_visible(False)
                     ax[j,k].yaxis.set_visible(False)
                     ax[j,k].scatter(arr[:,j],arr[:,k],c = class_colours[i])
-    plt.show()
+    # plt.show() #commented out this line as it'sonly for the report
     return [12,10]
 
 
@@ -107,8 +137,14 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
 
         # find the most common class among the neighbours (found this online)
         majorityClass = max(set(closestNeighbourClasses), key = closestNeighbourClasses.count)
-        classifiedTests.append(majorityClass)
+        classifiedTests.append(int(majorityClass))
 
+    #Calculate confusion matrix here
+    predictions = classifiedTests
+    confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
+    # confusion matrix is for the report
+    # print(confusion_mat)
+    # plot_matrix(confusion_mat)
     return classifiedTests
 
 
@@ -159,7 +195,7 @@ if __name__ == '__main__':
     elif mode == 'knn':
         predictions = knn(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
-        print(calculate_accuracy(test_labels, predictions))
+        # print(calculate_accuracy(test_labels, predictions))
     elif mode == 'alt':
         predictions = alternative_classifier(train_set, train_labels, test_set)
         print_predictions(predictions)
