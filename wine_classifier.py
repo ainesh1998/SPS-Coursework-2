@@ -21,7 +21,11 @@ CLASS_3_C = r'#ffc34d'
 class_colours = [CLASS_1_C,CLASS_2_C,CLASS_3_C]
 
 MODES = ['feature_sel', 'knn', 'alt', 'knn_3d', 'knn_pca']
+
+#################################
+
 #     Helper Functions     #
+
 def getColours(index,train_set):
     onlyColours = []
     for i in range(len(train_labels)):
@@ -29,7 +33,25 @@ def getColours(index,train_set):
             onlyColours.append(train_set[i])
     arr = np.array(onlyColours)
     return arr
+
+# Calculates Euclidean distance
+def distance(x, y):
+    result = 0
+    for i in range(x.size):
+        result += (x[i] - y[i])*(x[i] - y[i])
+    return result
+
+# Calculates the accuracy of a classifier
+def calculate_accuracy(gt_labels, pred_labels):
+    count = 0
+    for i in range(gt_labels.size):
+        if gt_labels[i] == pred_labels[i]:
+            count += 1
+
+    return count/gt_labels.size
+
 ################################
+
 def feature_selection(train_set, train_labels, **kwargs):
     # write your code here and make sure you return the features at the end of
     # the function
@@ -54,7 +76,38 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     # write your code here and make sure you return the predictions at the end of
     # the function
     # nearest centroid bit
-    return []
+
+    # reduce the train set to the features we selected
+    selected_features = [10,12]
+    reduced_train_set = train_set[:, selected_features[0]]
+
+    for feature in range(1, len(selected_features)):
+        reduced_train_set = np.column_stack((reduced_train_set, train_set[:, selected_features[feature]]))
+
+    classifiedTests = [] # stores the result of classification for each data sample
+
+    for test in test_set:
+        closestNeighbourIndices = [] # stores the indices of the nearest neighbours found so far
+        closestNeighbourClasses = [] # stores the classes of the nearest neighbours found so far
+
+        # find the k nearest neighbours for the test sample
+        for i in range(k):
+            minDist = np.Infinity
+            nearestClass = 0
+            nearestPointIndex = 0
+            for train in range(len(train_set)):
+                if distance(test, train_set[train]) < minDist and train not in closestNeighbourIndices:
+                    minDist = distance(test, train_set[train])
+                    nearestClass = train_labels[train]
+                    nearestPointIndex = train
+            closestNeighbourClasses.append(nearestClass)
+            closestNeighbourIndices.append(nearestPointIndex)
+
+        # find the most common class among the neighbours (found this online)
+        majorityClass = max(set(closestNeighbourClasses), key = closestNeighbourClasses.count)
+        classifiedTests.append(majorityClass)
+
+    return classifiedTests
 
 
 def alternative_classifier(train_set, train_labels, test_set, **kwargs):
