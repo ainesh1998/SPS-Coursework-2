@@ -106,7 +106,6 @@ def feature_selection(train_set, train_labels, **kwargs):
 def knn(train_set, train_labels, test_set, k, **kwargs):
     # write your code here and make sure you return the predictions at the end of
     # the function
-    # nearest centroid bit
 
     # reduce the train set to the features we selected
     selected_features = [10,12]
@@ -166,6 +165,7 @@ def alternative_classifier(train_set, train_labels, test_set, **kwargs):
     classes_featVar = []
     #probability of all the classes
     classes_prob = []
+    #get the mean and variance of all training points belonging to a specific class
     for i in range(len(classes)):
         arr = getColours(i,reduced_train_set)
         featMean = np.mean(arr,axis = 0)
@@ -174,8 +174,6 @@ def alternative_classifier(train_set, train_labels, test_set, **kwargs):
         classes_prob.append(probClass)
         classes_featMean.append(featMean)
         classes_featVar.append(featVar)
-    # print(classes_featMean)
-    # print(classes_featVar)
     featMean = np.mean(reduced_train_set,axis = 0)
     featVar = np.var(reduced_train_set,axis = 0)
 
@@ -185,23 +183,15 @@ def alternative_classifier(train_set, train_labels, test_set, **kwargs):
         for c in range(len(classes)):
             probClassGivenData = 1
             for i in range(len(selected_features)):
-                # print(data[i])
-                # print(classes_featMean[c][i])
-                # print(classes_featVar[c][i])
                 probDataGivenClass = compute_likelihood(data[i],classes_featMean[c][i],classes_featVar[c][i])
-                # print("P(D|C) = %f" % (probDataGivenClass))
-                # print()
-                # print(featMean[i])
-                # print(featVar[i])
-                # print()
-                probData = compute_likelihood(data[i],featMean[i],featVar[i])
-                # print("P(D) = %f" % (probData))
-                probClassGivenData *= (probDataGivenClass/probData)
+                """commented out probData as it didn't affect the values
+                    based off this: https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/
+                """
+                # probData = compute_likelihood(data[i],featMean[i],featVar[i])
+                probClassGivenData *= (probDataGivenClass)
             probClass = classes_prob[c]
             probClassGivenData *= probClass
             possibilities.append(probClassGivenData)
-        # print(possibilities)
-        # print()
         pred = np.argmax(possibilities) + 1
         predictions.append(pred)
     confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
