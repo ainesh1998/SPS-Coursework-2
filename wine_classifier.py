@@ -12,6 +12,7 @@ from __future__ import print_function
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats
 from utilities import load_data, print_features, print_predictions
 
 # you may use these colours to produce the scatter plots
@@ -147,11 +148,66 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     # plot_matrix(confusion_mat)
     return classifiedTests
 
+def compute_likelihood(D,mu,var):
+    return stats.norm(mu,np.sqrt(var)).pdf(D)
 
 def alternative_classifier(train_set, train_labels, test_set, **kwargs):
     # write your code here and make sure you return the predictions at the end of
     # the function
-    return []
+    selected_features = [10,12]
+    reduced_train_set = train_set[:, selected_features[0]]
+    reduced_test_set = test_set[:, selected_features[0]]
+    for feature in range(1, len(selected_features)):
+        reduced_train_set = np.column_stack((reduced_train_set, train_set[:, selected_features[feature]]))
+        reduced_test_set = np.column_stack((reduced_test_set, test_set[:, selected_features[feature]]))
+    #uses naive bayes classifier as alternative
+    classes = [1,2,3]
+    classes_featMean = []
+    classes_featVar = []
+    #probability of all the classes
+    classes_prob = []
+    for i in range(len(classes)):
+        arr = getColours(i,reduced_train_set)
+        featMean = np.mean(arr,axis = 0)
+        featVar  = np.var(arr,axis = 0)
+        probClass = len(arr)/len(train_labels)
+        classes_prob.append(probClass)
+        classes_featMean.append(featMean)
+        classes_featVar.append(featVar)
+    # print(classes_featMean)
+    # print(classes_featVar)
+    featMean = np.mean(reduced_train_set,axis = 0)
+    featVar = np.var(reduced_train_set,axis = 0)
+
+    predictions = []
+    for data in reduced_test_set:
+        possibilities = []
+        for c in range(len(classes)):
+            probClassGivenData = 1
+            for i in range(len(selected_features)):
+                # print(data[i])
+                # print(classes_featMean[c][i])
+                # print(classes_featVar[c][i])
+                probDataGivenClass = compute_likelihood(data[i],classes_featMean[c][i],classes_featVar[c][i])
+                # print("P(D|C) = %f" % (probDataGivenClass))
+                # print()
+                # print(featMean[i])
+                # print(featVar[i])
+                # print()
+                probData = compute_likelihood(data[i],featMean[i],featVar[i])
+                # print("P(D) = %f" % (probData))
+                probClassGivenData *= (probDataGivenClass/probData)
+            probClass = classes_prob[c]
+            probClassGivenData *= probClass
+            possibilities.append(probClassGivenData)
+        # print(possibilities)
+        # print()
+        pred = np.argmax(possibilities) + 1
+        predictions.append(pred)
+    confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
+    plot_matrix(confusion_mat)
+    print(calculate_accuracy(test_labels, predictions))
+    return predictions
 
 
 def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
@@ -195,7 +251,7 @@ if __name__ == '__main__':
     elif mode == 'knn':
         predictions = knn(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
-        # print(calculate_accuracy(test_labels, predictions))
+        print(calculate_accuracy(test_labels, predictions))
     elif mode == 'alt':
         predictions = alternative_classifier(train_set, train_labels, test_set)
         print_predictions(predictions)
