@@ -12,6 +12,7 @@ from __future__ import print_function
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
 from utilities import load_data, print_features, print_predictions
 
@@ -229,9 +230,18 @@ def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
         # print()
     #selected feature should have the weakest correlation
     feature = np.argmin(distances)
+    #printing 3d Cube plot
+
     # print(feature)
     reduced_train_set = np.column_stack((reduced_train_set, train_set[:, feature]))
     reduced_test_set = np.column_stack((reduced_test_set, test_set[:, feature]))
+    # fig,ax = plt.subplots()
+    # ax = fig.gca(projection = '3d')
+    # ax.set_xlabel(xlabel = "feature 10")
+    # ax.set_ylabel(ylabel = "feature 12")
+    # ax.set_zlabel(zlabel = "feature " + str(feature))
+    # plt.scatter(reduced_train_set[:,0],reduced_train_set[:,1],reduced_train_set[:,2])
+    # plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
 
