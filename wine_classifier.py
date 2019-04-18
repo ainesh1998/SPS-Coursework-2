@@ -203,7 +203,59 @@ def alternative_classifier(train_set, train_labels, test_set, **kwargs):
 def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
     # write your code here and make sure you return the predictions at the end of
     # the function
-    return []
+    selected_features = [10,12]
+    reduced_train_set = train_set[:, selected_features[0]]
+    reduced_test_set = test_set[:, selected_features[0]]
+    for feature in range(1, len(selected_features)):
+        reduced_train_set = np.column_stack((reduced_train_set, train_set[:, selected_features[feature]]))
+        reduced_test_set = np.column_stack((reduced_test_set, test_set[:, selected_features[feature]]))
+    cov_matrix = np.cov(reduced_train_set[:,0],reduced_train_set[:,1],rowvar = True)
+    # print(cov_matrix)
+    # print(reduced_train_set[:,0].shape)
+    #find feature with weakly correlates with feature 10 and 12
+    distances = []
+    for i in range(13):
+        data_set = train_set[:,i]
+        cov_matrix = np.cov([reduced_train_set[:,0],reduced_train_set[:,1],data_set],rowvar = True)
+        # print(cov_matrix)
+        # print()
+        corFeat10 = cov_matrix[0,2]
+        corFeat12 = cov_matrix[1,2]
+        correlation = np.array([corFeat10,corFeat12])
+        # using length of a vector as a way to judge how strongly they correlate
+        lengthVect = np.linalg.norm(correlation)
+        distances.append(lengthVect)
+        # print(correlation)
+        # print()
+    #selected feature should have the weakest correlation
+    feature = np.argmin(distances)
+    # print(feature)
+    reduced_train_set = np.column_stack((reduced_train_set, train_set[:, feature]))
+    reduced_test_set = np.column_stack((reduced_test_set, test_set[:, feature]))
+    #knn algorithm
+    classifiedTests = [] # stores the result of classification for each data sample
+
+    for test in reduced_test_set:
+        closestNeighbourIndices = [] # stores the indices of the nearest neighbours found so far
+        closestNeighbourClasses = [] # stores the classes of the nearest neighbours found so far
+
+        # find the k nearest neighbours for the test sample
+        for i in range(k):
+            minDist = np.Infinity
+            nearestClass = 0
+            nearestPointIndex = 0
+            for train in range(len(reduced_train_set)):
+                if distance(test, reduced_train_set[train]) < minDist and train not in closestNeighbourIndices:
+                    minDist = distance(test, reduced_train_set[train])
+                    nearestClass = train_labels[train]
+                    nearestPointIndex = train
+            closestNeighbourClasses.append(nearestClass)
+            closestNeighbourIndices.append(nearestPointIndex)
+
+        # find the most common class among the neighbours (found this online)
+        majorityClass = max(set(closestNeighbourClasses), key = closestNeighbourClasses.count)
+        classifiedTests.append(int(majorityClass))
+    return classifiedTests
 
 
 def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
@@ -248,6 +300,7 @@ if __name__ == '__main__':
     elif mode == 'knn_3d':
         predictions = knn_three_features(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
+        print(calculate_accuracy(test_labels, predictions))
     elif mode == 'knn_pca':
         prediction = knn_pca(train_set, train_labels, test_set, args.k)
         print_predictions(prediction)
