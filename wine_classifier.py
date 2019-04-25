@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from scipy import stats
+from sklearn.decomposition import PCA
 from utilities import load_data, print_features, print_predictions
 
 # you may use these colours to produce the scatter plots
@@ -89,19 +90,19 @@ def feature_selection(train_set, train_labels, **kwargs):
     # write your code here and make sure you return the features at the end of
     # the function
     # scatter plot bit
-    n_features = train_set.shape[1]
-    fig, ax = plt.subplots((n_features), (n_features))
-    plt.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01, wspace=0.2, hspace=0.4)
-    for i in range(len(class_colours)):
-        for j in range(n_features):
-            for k in range(n_features):
-                arr = getColours(i,train_set)
-                if(len(arr) != 0):
-                    ax[j,k].xaxis.set_visible(False)
-                    ax[j,k].yaxis.set_visible(False)
-                    ax[j,k].scatter(arr[:,j],arr[:,k],c = class_colours[i])
+    # n_features = train_set.shape[1]
+    # fig, ax = plt.subplots((n_features), (n_features))
+    # plt.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01, wspace=0.2, hspace=0.4)
+    # for i in range(len(class_colours)):
+    #     for j in range(n_features):
+    #         for k in range(n_features):
+    #             arr = getColours(i,train_set)
+    #             if(len(arr) != 0):
+    #                 ax[j,k].xaxis.set_visible(False)
+    #                 ax[j,k].yaxis.set_visible(False)
+    #                 ax[j,k].scatter(arr[:,j],arr[:,k],c = class_colours[i])
     # plt.show() #commented out this line as it'sonly for the report
-    return [12,10]
+    return [10,12]
 
 
 def knn(train_set, train_labels, test_set, k, **kwargs):
@@ -116,7 +117,6 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     for feature in range(1, len(selected_features)):
         reduced_train_set = np.column_stack((reduced_train_set, train_set[:, selected_features[feature]]))
         reduced_test_set = np.column_stack((reduced_test_set, test_set[:, selected_features[feature]]))
-
     classifiedTests = [] # stores the result of classification for each data sample
 
     for test in reduced_test_set:
@@ -271,7 +271,42 @@ def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
 def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
     # write your code here and make sure you return the predictions at the end of
     # the function
-    return []
+    pca = PCA(n_components)
+    pca = pca.fit(train_set)
+    sci_data = pca.transform(train_set)
+    sci_data[:,1] *= -1
+    #display scatter graph
+    fig,ax = plt.subplots()
+    plt.title("Reduced with Scipy's PCA")
+    for i in range(len(class_colours)):
+        arr = getColours(i,sci_data)
+        ax.scatter(arr[:,0],arr[:,1],c = class_colours[i])
+    plt.show()
+    #knn algorithm
+    classifiedTests = [] # stores the result of classification for each data sample
+    reduced_test_set = pca.transform(test_set)
+    for test in reduced_test_set:
+        closestNeighbourIndices = [] # stores the indices of the nearest neighbours found so far
+        closestNeighbourClasses = [] # stores the classes of the nearest neighbours found so far
+
+        # find the k nearest neighbours for the test sample
+        for i in range(k):
+            minDist = np.Infinity
+            nearestClass = 0
+            nearestPointIndex = 0
+            for train in range(len(sci_data)):
+                if distance(test, sci_data[train]) < minDist and train not in closestNeighbourIndices:
+                    minDist = distance(test, sci_data[train])
+                    nearestClass = train_labels[train]
+                    nearestPointIndex = train
+            closestNeighbourClasses.append(nearestClass)
+            closestNeighbourIndices.append(nearestPointIndex)
+
+        # find the most common class among the neighbours (found this online)
+        majorityClass = max(set(closestNeighbourClasses), key = closestNeighbourClasses.count)
+        classifiedTests.append(int(majorityClass))
+    print(calculate_accuracy(test_labels,classifiedTests))
+    return classifiedTests
 
 
 def parse_args():
