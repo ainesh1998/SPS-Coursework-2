@@ -93,6 +93,7 @@ def feature_selection(train_set, train_labels, **kwargs):
     # n_features = train_set.shape[1]
     # fig, ax = plt.subplots((n_features), (n_features))
     # plt.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01, wspace=0.2, hspace=0.4)
+    #
     # for i in range(len(class_colours)):
     #     for j in range(n_features):
     #         for k in range(n_features):
@@ -101,6 +102,15 @@ def feature_selection(train_set, train_labels, **kwargs):
     #                 ax[j,k].xaxis.set_visible(False)
     #                 ax[j,k].yaxis.set_visible(False)
     #                 ax[j,k].scatter(arr[:,j],arr[:,k],c = class_colours[i])
+
+    # plot only features 10 and 12
+    # fig, ax = plt.subplots()
+    # for i in range(len(class_colours)):
+    #     arr = getColours(i, train_set)
+    #     plt.xlabel("Feature 10")
+    #     plt.ylabel("Feature 12")
+    #     ax.scatter(arr[:,10], arr[:,12], c = class_colours[i])
+
     # plt.show() #commented out this line as it'sonly for the report
     return [10,12]
 

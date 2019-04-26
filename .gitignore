@@ -1,2 +1,5 @@
 .DS_Store
 __pycache__/
+report/report.aux
+report/report.log
+report/report.synctex.gz
