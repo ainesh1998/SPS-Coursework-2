@@ -73,14 +73,14 @@ def calculate_confusion_matrix(gt_labels, pred_labels,classes):
 def plot_matrix(matrix, ax=None):
     if ax is None:
         ax = plt.gca()
-    plt.imshow(matrix,cmap=plt.get_cmap('summer'))
+    plt.imshow(matrix,cmap=plt.get_cmap('summer'), aspect = 'auto')
     plt.colorbar()
     posY = 0
     for i in range(len(matrix)):
         posX = 0
         for j in range(len(matrix[0])):
             text = str(round(matrix[i,j],3))
-            plt.text(posX,posY,text)
+            plt.text(posX-0.3,posY+0.03,text, fontSize=22)
             posX += 1
         posY += 1
     plt.show()
@@ -155,7 +155,7 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
     # confusion matrix is for the report
     # print(confusion_mat)
-    # plot_matrix(confusion_mat)
+    plot_matrix(confusion_mat)
     return classifiedTests
 
 def compute_likelihood(D,mu,var):
