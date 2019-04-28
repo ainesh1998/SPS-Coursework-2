@@ -155,7 +155,7 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
     # confusion matrix is for the report
     # print(confusion_mat)
-    plot_matrix(confusion_mat)
+    # plot_matrix(confusion_mat)
     return classifiedTests
 
 def compute_likelihood(D,mu,var):
@@ -365,7 +365,7 @@ if __name__ == '__main__':
     elif mode == 'knn_3d':
         predictions = knn_three_features(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
-        print(calculate_accuracy(test_labels, predictions))
+        # print(calculate_accuracy(test_labels, predictions))
     elif mode == 'knn_pca':
         prediction = knn_pca(train_set, train_labels, test_set, args.k)
         print_predictions(prediction)

@@ -34,16 +34,37 @@ Based on the plot above, we decided to select features 10 and 12 as the data sep
 %\label{fig:10and12}
 %\end{figure}
 
-\section{K-Nearest Neighbours}
-\includegraphics[scale=0.3]{Confusion_matrix(k=1)}
-\includegraphics[scale=0.3]{Confusion_matrix(k=2)}
-\includegraphics[scale=0.3]{Confusion_matrix(k=3)}
-\includegraphics[scale=0.3]{Confusion_matrix(k=4)}
-\includegraphics[scale=0.3]{Confusion_matrix(k=5)}
-\includegraphics[scale=0.3]{Confusion_matrix(k=7)}
+\section{K-Nearest Neighbours (KNN)}
+We implemented the K-Nearest Neighbours classifier. By setting $k = \{1,2,3,4,5,7\}$ our classifier gave the following accuracies and confusion matrices when run with the reduced test set.
+
+%\begin{table}
+\begin{center}
+\begin{tabular}{c|c|c}
+\textbf{k} & \textbf{Accuracy}\\
+\hline
+1 & 0.7925\\
+2 & 0.6792\\
+3 & 0.7358\\
+4 & 0.7358\\
+5 & 0.6981\\
+7 & 0.7358\\
+\end{tabular}
+\end{center}
+%\end{table}
+
+\begin{center}
+\includegraphics[scale=0.2]{Confusion_matrix(k=1)}
+\includegraphics[scale=0.2]{Confusion_matrix(k=2)}
+\includegraphics[scale=0.2]{Confusion_matrix(k=3)}
+\includegraphics[scale=0.2]{Confusion_matrix(k=4)}
+\includegraphics[scale=0.2]{Confusion_matrix(k=5)}
+\includegraphics[scale=0.2]{Confusion_matrix(k=7)}
+\end{center}
+
+As seen in the table, our classifier gives the highest accuracy when $k = 1$. This can also be seen in the confusion matrices as the values along the diagonals are greatest when $k = 1$. According to the confusion matrices, a larger portion of test samples in class 1 are correctly classified as $k$ increases, as the values in cell $(1,1)$ increase. Classes 2 and 3 on the other hand have fewer correctly-classified predictions as k increases, as the values in cells $(2,2)$ and $(3,3)$ follow a decreasing trend. As $k$ increases, a higher portion of test samples in class 3 are incorrectly-classified in class 2, especially when $k = 2$ where a higher portion is classified in class 2 than in class 3 since the value in cell $(3,2)$ exceeds the value in cell $(3,3)$. This may also be a reason why our classifier gives the lowest accuracy when $k = 2$.
 
 \section{Alternative Classifier}
-
+For our alternative classifier, we have implemented the Naive Bayes classifier. This classifier gives a higher accuracy than our KNN classifier.
 \section{Use Three Features}
 
 \section{Principal Component Analysis (PCA)}
