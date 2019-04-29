@@ -109,8 +109,8 @@ def feature_selection(train_set, train_labels, **kwargs):
     #     arr = getColours(i, train_set)
     #     plt.xlabel("Feature 10")
     #     plt.ylabel("Feature 12")
-    #     ax.scatter(arr[:,10], arr[:,12], c = class_colours[i],label = 'Class ' + str(i + 1))
-    # ax.legend()
+    #     ax.scatter(arr[:,10], arr[:,12], c = class_colours[i])
+
     # plt.show() #commented out this line as it'sonly for the report
     return [10,12]
 
