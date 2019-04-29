@@ -294,7 +294,8 @@ def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
     plt.title("Reduced with Scipy's PCA")
     for i in range(len(class_colours)):
         arr = getColours(i,sci_data)
-        ax.scatter(arr[:,0],arr[:,1],c = class_colours[i])
+        ax.scatter(arr[:,0],arr[:,1],c = class_colours[i],label = 'Class ' + str(i + 1))
+    ax.legend()
     plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
