@@ -245,13 +245,6 @@ def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
     # print(feature)
     reduced_train_set = np.column_stack((reduced_train_set, train_set[:, feature]))
     reduced_test_set = np.column_stack((reduced_test_set, test_set[:, feature]))
-    # fig,ax = plt.subplots()
-    # ax = fig.gca(projection = '3d')
-    # ax.set_xlabel(xlabel = "feature 10")
-    # ax.set_ylabel(ylabel = "feature 12")
-    # ax.set_zlabel(zlabel = "feature " + str(feature))
-    # plt.scatter(reduced_train_set[:,0],reduced_train_set[:,1],reduced_train_set[:,2])
-    # plt.show()
     fig,ax = plt.subplots()
     ax = fig.gca(projection = '3d')
     ax.set_xlabel(xlabel = "feature 10")
@@ -260,7 +253,8 @@ def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
     plt.title("3d Plot")
     for i in range(len(class_colours)):
         arr = getColours(i,reduced_train_set)
-        ax.scatter(arr[:,0],arr[:,1],arr[:,2],c = class_colours[i])
+        ax.scatter(arr[:,0],arr[:,1],arr[:,2],c = class_colours[i],label = 'Class ' + str(i + 1))
+    ax.legend()
     plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
