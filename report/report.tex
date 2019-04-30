@@ -13,7 +13,7 @@
 We first plotted a 13x13 scatter plot for all pairwise combinations of features of the training data set, as seen below.
 
 %in Figure \ref{fig:13x13}.
-  
+
 %\begin{figure}
 %\centering
 \begin{center}
@@ -23,7 +23,7 @@ We first plotted a 13x13 scatter plot for all pairwise combinations of features 
 %\label{fig:13x13}
 %\end{figure}
 
-Based on the plot above, we decided to select features 10 and 12 as the data separate into their classes fairly well. This can be seen in the scatter plot of feature 12 against feature 10 below. We then reduced the train set and test set to only contain features 10 and 12.
+Based on the plot above, we decided to select features 10 and 12 as the data separate into their classes fairly well. We then reduced the train set and test set to only contain features 10 and 12. We chose these features as they separted the data into their vatious classes really well. However, this choice was very hard to make from the scatter plot as many plots looked very similar.This can be seen in the scatter plot can be seen below.
 % in Figure \ref{fig:10and12}.
 
 %\begin{figure}
@@ -62,7 +62,7 @@ We implemented the K-Nearest Neighbours classifier. By setting $k = \{1,2,3,4,5,
 \includegraphics[scale=0.2]{Confusion_matrix(k=7)}
 \end{center}
 
-As seen in the table, our classifier gives the highest accuracy when $k = 1$. This can also be seen in the confusion matrices as the values along the diagonals are greatest when $k = 1$. According to the confusion matrices, a larger portion of test samples in class 1 are correctly classified as $k$ increases, as the values in cell $(1,1)$ increase. Classes 2 and 3 on the other hand have fewer correctly-classified predictions as k increases, as the values in cells $(2,2)$ and $(3,3)$ follow a decreasing trend. As $k$ increases, a higher portion of test samples in class 3 are incorrectly-classified in class 2, especially when $k = 2$ where a higher portion is classified in class 2 than in class 3 since the value in cell $(3,2)$ exceeds the value in cell $(3,3)$. This may also be a reason why our classifier gives the lowest accuracy when $k = 2$.
+As seen in the table, our classifier gives the highest accuracy when $k = 1$. According to the confusion matrices, a larger portion of test samples in class 1 are correctly classified as $k$ increases. Classes 2 and 3 on the other hand have fewer correctly-classified predictions as k increases. As $k$ increases, a higher portion of test samples in class 3 are incorrectly-classified in class 2, especially when $k = 2$. This may also be a reason why our classifier gives the lowest accuracy when $k = 2$.
 
 The confusion matrices tell us that class 1 has the most data samples correctly predicted. This can also be seen in our scatter plot of feature 12 against feature 10 above, where the blue class which represents class 1 is visibly separated from the other two classes, which leads to a lower chance of class 1 being misclassified.
 
@@ -73,10 +73,10 @@ For our alternative classifier, we have implemented the Naive Bayes classifier. 
 \includegraphics[scale=0.2]{naive_bayes_matrix}
 \end{center}
 
-The confusion matrix tells us that all test data samples in class 1 were correctly classified. Hence, our assumption of the features being independent was reasonable for this as we obtained a higher accuracy than with KNN. This also strengthens our point of class 1 being more isolated from the other classes. We did not have to worry about smoothing as we assumed the features to be normally distributed, which meant the probabilities never reach 0.
+The confusion matrix tells us that all test data samples in class 1 were correctly classified. Hence, our assumption of the features being independent was reasonable for this as we obtained a higher accuracy than with KNN. This also strengthens our point of class 1 being more isolated from the other classes. We did not have to worry about smoothing as we assumed the features to be normally distributed, meaning that the probabilities never reach 0.
 
 \section{Use Three Features}
-To obtain the third feature for our KNN classifier, we calculated the covariance matrices of the two already-selected features and every other feature. We picked the feature 7 as it least correlates with features 10 and 12, hence has very little dependence on them. The covariance matrix and scatter plot for these features are as follows:
+To obtain the third feature for our KNN classifier, we calculated the covariance matrices of the two already-selected features and every other feature. We picked the feature 7 as it least correlates with features 10 and 12, thus telling us somethingnew about our data. The covariance matrix and scatter plot for these features are as follows:
 
 $$
 \bordermatrix{ ~ & ~ & ~ & ~ \cr
@@ -86,7 +86,7 @@ Feature 7 & -8.47\times10^{-3} & -1.35\times10^1 & 1.53\times10^{-2} \cr}
 $$
 
 \begin{center}
-\includegraphics[scale=0.3]{3d_plot}
+\includegraphics[scale=0.25]{3d_plot}
 \end{center}
 
 When KNN is run using these three features at $k = 1$, an accuracy of 0.8302 is achieved which is higher than with two features. This is because adding another feature made our reduced train set more representative of the original train set. However, this made it harder to interpret visually as seen by the 3D scatter plot above.
@@ -94,10 +94,9 @@ When KNN is run using these three features at $k = 1$, an accuracy of 0.8302 is 
 \section{Principal Component Analysis (PCA)}
 We used Scipy's PCA implementation on the train set to reduce it, and obtained the following scatter plot:
 \begin{center}
-\includegraphics[scale=0.25]{pca_scatter_graph}
+\includegraphics[scale=0.2]{pca_scatter_graph}
 \end{center}
 
-We ran KNN with this reduced train and test set and an accuracy of 0.6792 was obtained when $k = 1$. This is lower than with our manually selected features, which can also be seen via the scatter plot as there is a less distinct boundary between classes 2 and 3 in the PCA plot. This may be because our data has 13 dimensions, when PCA is most effective with higher dimensionality.
+After using the model to reduce the test set, we then ran KNN with this reduced train and test set and an accuracy of 0.6792 was obtained when $k = 1$. This is lower than with our manually selected features, which can also be seen via the scatter plot as there is a less distinct boundary between classes 2 and 3 in the PCA plot. This may be because our data only has 13 dimensions, whereas PCA is most effective with higher dimensionality.
 
 \end{document}
-
