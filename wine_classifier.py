@@ -70,6 +70,7 @@ def calculate_confusion_matrix(gt_labels, pred_labels,classes):
         confusion_mat.append(row)
     confusion_mat = np.row_stack(confusion_mat)
     return confusion_mat
+
 def plot_matrix(matrix, title, ax=None):
     if ax is None:
         ax = plt.gca()
@@ -111,7 +112,8 @@ def feature_selection(train_set, train_labels, **kwargs):
     #     plt.xlabel("Feature 10")
     #     plt.ylabel("Feature 12")
     #     ax.scatter(arr[:,10], arr[:,12], c = class_colours[i])
-
+    #
+    # ax.legend(("Class 1", "Class 2", "Class 3"))
     # plt.show() #commented out this line as it'sonly for the report
     return [10,12]
 
