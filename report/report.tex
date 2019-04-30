@@ -16,7 +16,7 @@ We first plotted a 13x13 scatter plot for all pairwise combinations of features 
 \includegraphics[scale=0.25]{feature_selection}
 \end{center}
 
-Based on the plot above, we decided to select features 10 and 12 as the data separate into their classes fairly well. We then reduced the train set and test set to only contain features 10 and 12. We chose these features as they separted the data into their vatious classes really well. However, this choice was very hard to make from the scatter plot as many plots looked very similar.This can be seen in the scatter plot can be seen below.
+Based on the plot above, we decided to select features 10 and 12 as the data separate into their classes fairly well. We then reduced the train set and test set to only contain features 10 and 12. We chose these features as they separated the data into their various classes really well. However, this choice was very hard to make from the scatter plot as many plots looked very similar. This can be seen in the scatter plot below.
 
 \begin{center}
 \includegraphics[scale=0.3]{features_10_12}
@@ -52,7 +52,7 @@ As seen in the table, our classifier gives the highest accuracy when $k = 1$. Ac
 The confusion matrices tell us that class 1 has the most data samples correctly predicted. This can also be seen in our scatter plot of feature 12 against feature 10 above, where the blue class which represents class 1 is visibly separated from the other two classes, which leads to a lower chance of class 1 being misclassified.
 
 \section{Alternative Classifier}
-For our alternative classifier, we have implemented the Naive Bayes classifier. We assumed the features selected to be independent and normally distributed. This classifier gives an accuracy of 0.8679, which is higher than that our KNN classifier. The classifier gives the following confusion matrix.
+For our alternative classifier, we have implemented the Naive Bayes classifier. We assumed the features selected to be independent and normally distributed. This classifier gives an accuracy of 0.8679, which is higher than that of our KNN classifier. The classifier gives the following confusion matrix.
 
 \begin{center}
 \includegraphics[scale=0.2]{naive_bayes_matrix}
@@ -61,7 +61,7 @@ For our alternative classifier, we have implemented the Naive Bayes classifier. 
 The confusion matrix tells us that all test data samples in class 1 were correctly classified. Hence, our assumption of the features being independent was reasonable for this as we obtained a higher accuracy than with KNN. This also strengthens our point of class 1 being more isolated from the other classes. We did not have to worry about smoothing as we assumed the features to be normally distributed, meaning that the probabilities never reach 0.
 
 \section{Use Three Features}
-To obtain the third feature for our KNN classifier, we calculated the covariance matrices of the two already-selected features and every other feature. We picked the feature 7 as it least correlates with features 10 and 12, thus telling us something new about our data. The covariance matrix and scatter plot for these features are as follows:
+To obtain the third feature for our KNN classifier, we calculated the covariance matrices of the two already-selected features and every other feature. We picked the feature 7 as it least correlates with features 10 and 12, thus having lower dependence on them and giving us more previously-unconsidered information about our data. The covariance matrix and scatter plot for these features are as follows:
 
 $$
 \bordermatrix{ ~ & ~ & ~ & ~ \cr
@@ -77,11 +77,12 @@ $$
 When KNN is run using these three features at $k = 1$, an accuracy of 0.8302 is achieved which is higher than with two features. This is because adding another feature made our reduced train set more representative of the original train set. However, this made it harder to interpret visually as seen by the 3D scatter plot above.
 
 \section{Principal Component Analysis (PCA)}
-We used Scipy's PCA implementation on the train set to reduce it, and obtained the following scatter plot:
+We used Scipy's PCA implementation on the train set to reduce it to two features, and obtained the following scatter plot from this reduced train set:
+
 \begin{center}
 \includegraphics[scale=0.3]{pca_scatter_graph}
 \end{center}
 
-After using the model to reduce the test set, we then ran KNN with this reduced train and test set and an accuracy of 0.6792 was obtained when $k = 1$. This is lower than with our manually selected features, which can also be seen via the scatter plot as there is a less distinct boundary between classes 2 and 3 in the PCA plot. This may be because our data only has 13 dimensions, whereas PCA is most effective with higher dimensionality.
+After using this PCA model to reduce the test set, we then ran KNN with this reduced train and test set and an accuracy of 0.6792 was obtained when $k = 1$. This is lower than with our manually selected features, which can also be seen via the scatter plot as there is a less distinct boundary between classes 2 and 3 in the PCA plot. This may be because our data only has 13 dimensions, whereas PCA is most effective with higher dimensionality.
 
 \end{document}
