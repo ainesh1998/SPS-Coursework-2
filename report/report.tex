@@ -16,7 +16,7 @@ We first plotted a 13x13 scatter plot for all pairwise combinations of features 
 \includegraphics[scale=0.25]{feature_selection}
 \end{center}
 
-Based on the plot above, we decided to select features 10 and 12 as the data separate into their classes fairly well. We then reduced the train set and test set to only contain features 10 and 12. We chose these features as they separated the data into their various classes really well. However, this choice was very hard to make from the scatter plot as many plots looked very similar. This can be seen in the scatter plot below.
+Based on the plot above, we decided to select features 10 and 12. We then reduced the train set and test set to only contain features 10 and 12. We chose these features as they separated the data into their various classes really well. However, this choice was very hard to make from the scatter plot as many plots looked very similar. The scatter plot of features 10 and 12 can be seen below.
 
 \begin{center}
 \includegraphics[scale=0.3]{features_10_12}
@@ -52,7 +52,7 @@ As seen in the table, our classifier gives the highest accuracy when $k = 1$. Ac
 The confusion matrices tell us that class 1 has the most data samples correctly predicted. This can also be seen in our scatter plot of feature 12 against feature 10 above, where the blue class which represents class 1 is visibly separated from the other two classes, which leads to a lower chance of class 1 being misclassified.
 
 \section{Alternative Classifier}
-For our alternative classifier, we have implemented the Naive Bayes classifier. We assumed the features selected to be independent and normally distributed. This classifier gives an accuracy of 0.8679, which is higher than that of our KNN classifier. The classifier gives the following confusion matrix.
+For our alternative classifier, we have implemented the Naive Bayes classifier. We assumed the features selected to be independent and normally distributed. This classifier gives an accuracy of 0.8679, which is higher than that of our KNN classifier. The classifier gives the following confusion matrix:
 
 \begin{center}
 \includegraphics[scale=0.2]{naive_bayes_matrix}
