@@ -195,19 +195,15 @@ def alternative_classifier(train_set, train_labels, test_set, **kwargs):
             probClassGivenData = 1
             for i in range(len(selected_features)):
                 probDataGivenClass = compute_likelihood(data[i],classes_featMean[c][i],classes_featVar[c][i])
-                """commented out probData as it didn't affect the values
-                    based off this: https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/
-                """
-                # probData = compute_likelihood(data[i],featMean[i],featVar[i])
                 probClassGivenData *= (probDataGivenClass)
             probClass = classes_prob[c]
             probClassGivenData *= probClass
             possibilities.append(probClassGivenData)
         pred = np.argmax(possibilities) + 1
         predictions.append(pred)
-    confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
-    plot_matrix(confusion_mat)
-    print(calculate_accuracy(test_labels, predictions))
+    # confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
+    # plot_matrix(confusion_mat)
+    # print(calculate_accuracy(test_labels, predictions))
     return predictions
 
 
@@ -241,21 +237,19 @@ def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
     #selected feature should have the weakest correlation
     feature = np.argmin(distances)
     #printing 3d Cube plot
-
-    # print(feature)
-    reduced_train_set = np.column_stack((reduced_train_set, train_set[:, feature]))
-    reduced_test_set = np.column_stack((reduced_test_set, test_set[:, feature]))
-    fig,ax = plt.subplots()
-    ax = fig.gca(projection = '3d')
-    ax.set_xlabel(xlabel = "feature 10")
-    ax.set_ylabel(ylabel = "feature 12")
-    ax.set_zlabel(zlabel = "feature " + str(feature))
-    plt.title("3d Plot")
-    for i in range(len(class_colours)):
-        arr = getColours(i,reduced_train_set)
-        ax.scatter(arr[:,0],arr[:,1],arr[:,2],c = class_colours[i],label = 'Class ' + str(i + 1))
-    ax.legend()
-    plt.show()
+    # reduced_train_set = np.column_stack((reduced_train_set, train_set[:, feature]))
+    # reduced_test_set = np.column_stack((reduced_test_set, test_set[:, feature]))
+    # fig,ax = plt.subplots()
+    # ax = fig.gca(projection = '3d')
+    # ax.set_xlabel(xlabel = "feature 10")
+    # ax.set_ylabel(ylabel = "feature 12")
+    # ax.set_zlabel(zlabel = "feature " + str(feature))
+    # plt.title("3d Plot")
+    # for i in range(len(class_colours)):
+    #     arr = getColours(i,reduced_train_set)
+    #     ax.scatter(arr[:,0],arr[:,1],arr[:,2],c = class_colours[i],label = 'Class ' + str(i + 1))
+    # ax.legend()
+    # plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
 
@@ -290,13 +284,13 @@ def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
     sci_data = pca.transform(train_set)
     sci_data[:,1] *= -1
     #display scatter graph
-    fig,ax = plt.subplots()
-    plt.title("Reduced with Scipy's PCA")
-    for i in range(len(class_colours)):
-        arr = getColours(i,sci_data)
-        ax.scatter(arr[:,0],arr[:,1],c = class_colours[i],label = 'Class ' + str(i + 1))
-    ax.legend()
-    plt.show()
+    # fig,ax = plt.subplots()
+    # plt.title("Reduced with Scipy's PCA")
+    # for i in range(len(class_colours)):
+    #     arr = getColours(i,sci_data)
+    #     ax.scatter(arr[:,0],arr[:,1],c = class_colours[i],label = 'Class ' + str(i + 1))
+    # ax.legend()
+    # plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
     reduced_test_set = pca.transform(test_set)
@@ -320,7 +314,7 @@ def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
         # find the most common class among the neighbours (found this online)
         majorityClass = max(set(closestNeighbourClasses), key = closestNeighbourClasses.count)
         classifiedTests.append(int(majorityClass))
-    print(calculate_accuracy(test_labels,classifiedTests))
+    # print(calculate_accuracy(test_labels,classifiedTests))
     return classifiedTests
 
 
@@ -353,7 +347,7 @@ if __name__ == '__main__':
     elif mode == 'knn':
         predictions = knn(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
-        print(calculate_accuracy(test_labels, predictions))
+        # print(calculate_accuracy(test_labels, predictions))
     elif mode == 'alt':
         predictions = alternative_classifier(train_set, train_labels, test_set)
         print_predictions(predictions)
