@@ -70,7 +70,7 @@ def calculate_confusion_matrix(gt_labels, pred_labels,classes):
         confusion_mat.append(row)
     confusion_mat = np.row_stack(confusion_mat)
     return confusion_mat
-def plot_matrix(matrix, ax=None):
+def plot_matrix(matrix, title, ax=None):
     if ax is None:
         ax = plt.gca()
     plt.imshow(matrix,cmap=plt.get_cmap('summer'), aspect = 'auto')
@@ -83,6 +83,7 @@ def plot_matrix(matrix, ax=None):
             plt.text(posX-0.3,posY+0.03,text, fontSize=22)
             posX += 1
         posY += 1
+    plt.title(title, fontSize = 22)
     plt.show()
 ################################
 
@@ -155,7 +156,7 @@ def knn(train_set, train_labels, test_set, k, **kwargs):
     confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
     # confusion matrix is for the report
     # print(confusion_mat)
-    # plot_matrix(confusion_mat)
+    # plot_matrix(confusion_mat, "k = " + str(k))
     return classifiedTests
 
 def compute_likelihood(D,mu,var):
@@ -206,8 +207,8 @@ def alternative_classifier(train_set, train_labels, test_set, **kwargs):
         pred = np.argmax(possibilities) + 1
         predictions.append(pred)
     confusion_mat = calculate_confusion_matrix(test_labels,predictions,[1,2,3])
-    plot_matrix(confusion_mat)
-    print(calculate_accuracy(test_labels, predictions))
+    # plot_matrix(confusion_mat, "Naive Bayes")
+    # print(calculate_accuracy(test_labels, predictions))
     return predictions
 
 
@@ -255,7 +256,7 @@ def knn_three_features(train_set, train_labels, test_set, k, **kwargs):
         arr = getColours(i,reduced_train_set)
         ax.scatter(arr[:,0],arr[:,1],arr[:,2],c = class_colours[i],label = 'Class ' + str(i + 1))
     ax.legend()
-    plt.show()
+    # plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
 
@@ -296,7 +297,7 @@ def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
         arr = getColours(i,sci_data)
         ax.scatter(arr[:,0],arr[:,1],c = class_colours[i],label = 'Class ' + str(i + 1))
     ax.legend()
-    plt.show()
+    # plt.show()
     #knn algorithm
     classifiedTests = [] # stores the result of classification for each data sample
     reduced_test_set = pca.transform(test_set)
@@ -320,7 +321,7 @@ def knn_pca(train_set, train_labels, test_set, k, n_components=2, **kwargs):
         # find the most common class among the neighbours (found this online)
         majorityClass = max(set(closestNeighbourClasses), key = closestNeighbourClasses.count)
         classifiedTests.append(int(majorityClass))
-    print(calculate_accuracy(test_labels,classifiedTests))
+    # print(calculate_accuracy(test_labels,classifiedTests))
     return classifiedTests
 
 
@@ -353,7 +354,7 @@ if __name__ == '__main__':
     elif mode == 'knn':
         predictions = knn(train_set, train_labels, test_set, args.k)
         print_predictions(predictions)
-        print(calculate_accuracy(test_labels, predictions))
+        # print(calculate_accuracy(test_labels, predictions))
     elif mode == 'alt':
         predictions = alternative_classifier(train_set, train_labels, test_set)
         print_predictions(predictions)
